@@ -233,3 +233,59 @@ healthcheck:
 
 Cứ 10 giây Docker kiểm tra API một lần
 Nếu API lỗi nhiều lần, container được đánh dấu là unhealthy
+## 3. Ưu điểm khi triển khai app bằng Docker
+
+Docker có nhiều ưu điểm khi triển khai ứng dụng:
+
+### 3.1. Đồng nhất môi trường chạy
+
+Ứng dụng chạy được trên laptop thì khi đưa lên server cũng có thể chạy giống vậy.
+
+Điều này giúp tránh lỗi kiểu:
+```
+Máy em chạy được, máy thầy không chạy được
+```
+### 3.2. Triển khai nhanh
+
+Chỉ cần có:
+
+Dockerfile
+docker-compose.yml
+Source code
+
+Sau đó chạy:
+```
+docker compose up -d
+```
+### 3.3. Dễ quản lý nhiều service
+
+Một hệ thống có nhiều thành phần như:
+
+Web server
+API
+Database
+Dashboard
+Tool xử lý dữ liệu
+
+có thể quản lý chung trong một file docker-compose.yml.
+### 3.4. Dễ backup và restore
+
+Có thể backup:
+
+Docker image
+Source code
+Volume
+Database
+
+Sau đó chuyển sang máy khác và khôi phục lại.
+### 3.5. Cô lập ứng dụng
+
+Mỗi service chạy trong một container riêng.
+
+Ví dụ:
+
+Flask API chạy trong container riêng
+MariaDB chạy trong container riêng
+Grafana chạy trong container riêng
+
+Nhờ vậy hạn chế xung đột thư viện và cấu hình.
