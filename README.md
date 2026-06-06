@@ -289,3 +289,11 @@ MariaDB chạy trong container riêng
 Grafana chạy trong container riêng
 
 Nhờ vậy hạn chế xung đột thư viện và cấu hình.
+
+
+
+<img width="1121" height="229" alt="image" src="https://github.com/user-attachments/assets/3781d4c7-712f-44e7-afd3-6ae96b7aaa3a" />
+
+
+vẽ biểu đồ
+<img width="1360" height="751" alt="image" src="https://github.com/user-attachments/assets/62a8318e-ca00-49ea-89a3-722a72199f0b" />
