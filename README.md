@@ -1,149 +1,174 @@
 # BT5 - Docker Compose: App Monitor + Alert Data Realtime
+## Họ & tên : Lăng Nguyễn Minh Lượng
+## MSSV: K225480106044
+## 1. Thông tin bài tập lớn
 
-## 1. Phần lý thuyết
+**Môn học:** Phát triển ứng dụng với mã nguồn mở - TEE0421
 
-### 1.1. Docker là gì?
+**Các bài trong bài tập lớn:**
+
+- **BT1:** Ubuntu + Docker: Dùng Docker để build `myapi`
+- **BT2:** Django Python: Web quản lý tiệm cầm đồ
+- **BT3:** WordPress + MariaDB + phpMyAdmin
+- **BT4:** WordPress + n8n + Bot Telegram + Gemini: Auto đăng bài bằng cách chat
+- **BT5:** Docker Compose: App Monitor + Alert Data Realtime
+
+---
+
+# PHẦN I. LÝ THUYẾT
+
+## 2. Docker là gì?
 
 Docker là nền tảng dùng để đóng gói, triển khai và chạy ứng dụng trong các **container**.
 
-Container là môi trường chạy độc lập, bên trong có đầy đủ:
+Container là một môi trường chạy độc lập, bên trong có đầy đủ:
 
 - Mã nguồn ứng dụng
 - Thư viện cần thiết
 - Runtime
-- Cấu hình môi trường
+- File cấu hình
 - Các dependency liên quan
 
 Nhờ Docker, ứng dụng có thể chạy ổn định trên nhiều môi trường khác nhau như:
 
 - Laptop cá nhân
+- Máy ảo Ubuntu
 - Máy chủ thật
-- Máy ảo
 - Cloud server
 
-Ví dụ:
-
-Một ứng dụng Flask cần Python, Flask và MySQL connector.  
-Thay vì cài thủ công trên từng máy, ta đóng gói toàn bộ vào Docker image.
-
-Sau đó chỉ cần chạy:
+Ví dụ: một ứng dụng Flask cần Python, Flask và thư viện kết nối MariaDB. Thay vì cài thủ công các thành phần này trên từng máy, ta đóng gói toàn bộ vào Docker image. Sau đó chỉ cần chạy:
 
 ```bash
 docker run ten-image
 ```
-### 1.2. Docker Compose là gì?
 
-Docker Compose là công cụ dùng để quản lý và chạy nhiều container cùng lúc bằng file cấu hình:
-```
+Ứng dụng sẽ chạy với môi trường đã được đóng gói sẵn.
+
+---
+
+## 3. Docker Compose là gì?
+
+Docker Compose là công cụ dùng để quản lý nhiều container cùng lúc bằng một file cấu hình:
+
+```text
 docker-compose.yml
 ```
+
 Ví dụ một hệ thống có nhiều thành phần:
 
-Flask API
-MariaDB
-InfluxDB
-Grafana
-Node-RED
-Nginx
+- Flask API
+- MariaDB
+- InfluxDB
+- Grafana
+- Node-RED
+- Nginx
 
-Nếu chạy từng container bằng lệnh docker run sẽ rất dài và khó quản lý.
+Nếu chạy từng container bằng `docker run` thì câu lệnh rất dài và khó quản lý.
 
-Với Docker Compose, ta chỉ cần chạy:
-```
+Với Docker Compose, ta chỉ cần khai báo toàn bộ service trong file `docker-compose.yml`, sau đó chạy:
+
+```bash
 docker compose up -d
 ```
-Docker sẽ tự tạo và chạy toàn bộ các service đã khai báo trong file docker-compose.yml.
-## 2. Các keyword thường dùng trong docker-compose.yml
-### 2.1. services
+
+Docker sẽ tự tạo network, volume và chạy toàn bộ container theo cấu hình.
+
+---
+
+## 4. Các keyword thường dùng trong docker-compose.yml
+
+### 4.1. `services`
+
 Dùng để khai báo danh sách các service/container trong hệ thống.
-Ví dụ:
-```
+
+```yaml
 services:
   api:
     build: ./api
     ports:
       - "5000:5000"
 ```
+
 Ý nghĩa:
 
-Tạo service tên là api
-Build image từ thư mục ./api
-Mở port 5000
-### 2.2. image
+- Tạo service tên là `api`
+- Build image từ thư mục `./api`
+- Mở port `5000`
 
-Dùng để chỉ định image có sẵn.
+### 4.2. `image`
 
-Ví dụ:
-```
+Dùng để chỉ định image có sẵn từ Docker Hub hoặc image đã build local.
+
+```yaml
 mariadb:
   image: mariadb:11
 ```
-Ý nghĩa:
 
-Service mariadb sử dụng image mariadb:11
-### 2.3. build
+Ý nghĩa: service `mariadb` sử dụng image `mariadb:11`.
+
+### 4.3. `build`
 
 Dùng để build image từ Dockerfile.
 
-Ví dụ:
-```
+```yaml
 api:
   build: ./api
 ```
-Ý nghĩa:
 
-Docker sẽ tìm file Dockerfile trong thư mục api
-Sau đó build image cho service api
-### 2.4. container_name
+Ý nghĩa: Docker sẽ tìm file `Dockerfile` trong thư mục `./api` và build image cho service `api`.
+
+### 4.4. `container_name`
 
 Dùng để đặt tên cụ thể cho container.
 
-Ví dụ:
-```
+```yaml
 container_name: bt5_api
 ```
-Ý nghĩa:
 
-Container được tạo ra có tên là bt5_api
-Giúp dễ quản lý khi dùng lệnh docker ps
-### 2.5. ports
+Ý nghĩa: container được tạo ra có tên là `bt5_api`, giúp dễ quản lý khi dùng:
+
+```bash
+docker ps
+docker logs bt5_api
+```
+
+### 4.5. `ports`
 
 Dùng để ánh xạ cổng từ máy thật vào container.
 
-Ví dụ:
-```
+```yaml
 ports:
   - "8080:80"
 ```
+
 Ý nghĩa:
 
-Máy thật port 8080 -> Container port 80
+```text
+Port 8080 của máy thật -> Port 80 trong container
+```
 
-Khi truy cập:
-```
-http://localhost:8080
-```
-thì thực chất đang truy cập vào port 80 trong container.
-### 2.6. environment
+Khi truy cập `http://localhost:8080` thì thực chất đang truy cập vào port `80` bên trong container.
+
+### 4.6. `environment`
 
 Dùng để khai báo biến môi trường cho container.
 
-Ví dụ:
-```
+```yaml
 environment:
-  MARIADB_ROOT_PASSWORD: root123
-  MARIADB_DATABASE: monitor_db
+  MYSQL_ROOT_PASSWORD: root123
+  MYSQL_DATABASE: monitor_db
 ```
+
 Ý nghĩa:
 
-Đặt mật khẩu root cho MariaDB
-Tạo database tên `monitor_db`
-### 2.7. volumes
+- Đặt mật khẩu root cho MariaDB
+- Tạo database tên `monitor_db`
+
+### 4.7. `volumes`
 
 Dùng để lưu dữ liệu bền vững hoặc mount thư mục từ máy thật vào container.
 
-Ví dụ:
-```
+```yaml
 volumes:
   mariadb_data:
 
@@ -152,16 +177,14 @@ services:
     volumes:
       - mariadb_data:/var/lib/mysql
 ```
-Ý nghĩa:
 
-Dữ liệu MariaDB được lưu trong volume mariadb_data
-Khi container bị xóa, dữ liệu vẫn còn
-### 2.8. networks
+Ý nghĩa: dữ liệu MariaDB được lưu trong volume `mariadb_data`. Khi container bị xóa, dữ liệu vẫn còn.
+
+### 4.8. `networks`
 
 Dùng để tạo mạng nội bộ cho các container giao tiếp với nhau.
 
-Ví dụ:
-```
+```yaml
 networks:
   monitor_net:
 
@@ -174,121 +197,88 @@ services:
     networks:
       - monitor_net
 ```
-Ý nghĩa:
 
-api và mariadb cùng nằm trong network monitor_net
-Service api có thể gọi database bằng hostname:
-```
-mariadb
-```
-### 2.9. depends_on
+Ý nghĩa: `api` và `mariadb` cùng nằm trong network `monitor_net`, service `api` có thể gọi database bằng hostname `mariadb`.
+
+### 4.9. `depends_on`
 
 Dùng để quy định thứ tự khởi động service.
 
-Ví dụ:
-```
+```yaml
 api:
   depends_on:
     - mariadb
 ```
-Ý nghĩa:
 
-Service mariadb được khởi động trước api
-### 2.10. restart
+Ý nghĩa: service `mariadb` được khởi động trước `api`.
+
+### 4.10. `restart`
 
 Dùng để cấu hình tự khởi động lại container.
 
-Ví dụ:
+```yaml
+restart: always
 ```
-restart: unless-stopped
-```
-Ý nghĩa:
 
-Container sẽ tự chạy lại khi bị lỗi hoặc khi máy chủ restart
-Trừ khi người dùng chủ động stop container
-### 2.11. command
+Ý nghĩa: container sẽ tự khởi động lại nếu bị lỗi hoặc khi máy chủ restart.
+
+### 4.11. `command`
 
 Dùng để ghi đè lệnh chạy mặc định trong container.
 
-Ví dụ:
-```
+```yaml
 command: python app.py
 ```
-Ý nghĩa:
 
-Khi container chạy, nó sẽ thực thi lệnh `python app.py`
-### 2.12. healthcheck
+Ý nghĩa: khi container chạy, nó sẽ thực thi lệnh `python app.py`.
+
+### 4.12. `healthcheck`
 
 Dùng để kiểm tra container có hoạt động bình thường hay không.
 
-Ví dụ:
-```
+```yaml
 healthcheck:
-  test: ["CMD", "curl", "-f", "http://localhost:5000/api/latest"]
+  test: ["CMD", "curl", "-f", "http://localhost:5000/api/health"]
   interval: 10s
   timeout: 5s
   retries: 5
 ```
-Ý nghĩa:
 
-Cứ 10 giây Docker kiểm tra API một lần
-Nếu API lỗi nhiều lần, container được đánh dấu là unhealthy
-## 3. Ưu điểm khi triển khai app bằng Docker
+Ý nghĩa: Docker sẽ kiểm tra API định kỳ. Nếu API lỗi nhiều lần, container được đánh dấu là `unhealthy`.
 
-Docker có nhiều ưu điểm khi triển khai ứng dụng:
+---
 
-### 3.1. Đồng nhất môi trường chạy
+## 5. Ưu điểm khi triển khai ứng dụng bằng Docker
 
-Ứng dụng chạy được trên laptop thì khi đưa lên server cũng có thể chạy giống vậy.
+### 5.1. Đồng nhất môi trường chạy
 
-Điều này giúp tránh lỗi kiểu:
-```
+Ứng dụng chạy được trên laptop thì khi đưa lên server cũng có thể chạy giống vậy, hạn chế lỗi:
+
+```text
 Máy em chạy được, máy thầy không chạy được
 ```
-### 3.2. Triển khai nhanh
 
-Chỉ cần có:
+### 5.2. Triển khai nhanh
 
-Dockerfile
-docker-compose.yml
-Source code
+Chỉ cần có Dockerfile, docker-compose.yml và source code, sau đó chạy:
 
-Sau đó chạy:
-```
+```bash
 docker compose up -d
 ```
-### 3.3. Dễ quản lý nhiều service
 
-Một hệ thống có nhiều thành phần như:
+### 5.3. Dễ quản lý nhiều service
 
-Web server
-API
-Database
-Dashboard
-Tool xử lý dữ liệu
+Một hệ thống có nhiều thành phần như webserver, API, database, dashboard, công cụ xử lý dữ liệu có thể được quản lý chung trong một file `docker-compose.yml`.
 
-có thể quản lý chung trong một file docker-compose.yml.
-### 3.4. Dễ backup và restore
+### 5.4. Dễ backup và restore
 
-Có thể backup:
+Có thể backup Docker image, source code, volume và database, sau đó chuyển sang máy khác và khôi phục lại.
 
-Docker image
-Source code
-Volume
-Database
+### 5.5. Cô lập ứng dụng
 
-Sau đó chuyển sang máy khác và khôi phục lại.
-### 3.5. Cô lập ứng dụng
+Mỗi service chạy trong một container riêng như Flask API, MariaDB, Grafana, Node-RED. Nhờ vậy hạn chế xung đột thư viện và cấu hình.
 
-Mỗi service chạy trong một container riêng.
-
-Ví dụ:
-
-Flask API chạy trong container riêng
-MariaDB chạy trong container riêng
-Grafana chạy trong container riêng
-
-Nhờ vậy hạn chế xung đột thư viện và cấu hình.
+---
 
 
 
