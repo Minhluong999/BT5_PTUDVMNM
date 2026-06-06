@@ -297,3 +297,8 @@ Nhờ vậy hạn chế xung đột thư viện và cấu hình.
 
 vẽ biểu đồ
 <img width="1360" height="751" alt="image" src="https://github.com/user-attachments/assets/62a8318e-ca00-49ea-89a3-722a72199f0b" />
+
+
+
+
+<img width="1366" height="753" alt="image" src="https://github.com/user-attachments/assets/3b3fd770-e6e4-4d96-ad0a-1debd7ed54e8" />
