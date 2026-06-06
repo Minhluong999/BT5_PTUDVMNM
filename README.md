@@ -280,6 +280,256 @@ Mỗi service chạy trong một container riêng như Flask API, MariaDB, Grafa
 
 ---
 
+## 6. Triển khai Docker app lên máy chủ không có Internet
+
+Khi app đã được build và test OK trên laptop cá nhân hoặc máy ảo Ubuntu, nếu muốn triển khai lên máy chủ thật không có Internet, cần thực hiện các bước sau.
+
+### 6.1. Trên máy đang test OK
+
+Kiểm tra các image đang có:
+
+```bash
+docker images
+```
+<img width="1135" height="646" alt="image" src="https://github.com/user-attachments/assets/b5722523-2b9f-4e2d-8f4b-08a18639ffa7" />
+
+Đóng gói image ra file `.tar`:
+
+```bash
+docker save -o monitor-alert-images.tar \
+grafana/grafana:latest \
+influxdb:2.7 \
+mariadb:11 \
+monitor-flask-api:1.0 \
+nginx:latest \
+nodered/node-red:latest
+```
+
+Kiểm tra file image:
+
+```bash
+ls -lh monitor-alert-images.tar
+```
+
+Kết quả thực tế:
+
+```text
+monitor-alert-images.tar   908M
+```
+
+### 6.2. Backup volume dữ liệu
+
+Các volume quan trọng gồm:
+
+```text
+monitor-alert-app_nodered_data
+monitor-alert-app_grafana_data
+monitor-alert-app_influxdb_data
+monitor-alert-app_mariadb_data
+```
+
+Dừng app tạm thời:
+
+```bash
+cd ~/monitor-alert-app
+docker compose stop
+```
+
+Backup Node-RED:
+
+```bash
+docker run --rm \
+--entrypoint tar \
+-v monitor-alert-app_nodered_data:/data \
+-v /home/admin1/monitor-alert-app/backups:/backup \
+nodered/node-red:latest \
+czf /backup/nodered_data.tar.gz -C /data .
+```
+
+Backup Grafana:
+
+```bash
+docker run --rm \
+--user root \
+--entrypoint tar \
+-v monitor-alert-app_grafana_data:/data \
+-v /home/admin1/monitor-alert-app/backups:/backup \
+grafana/grafana:latest \
+czf /backup/grafana_data.tar.gz -C /data .
+```
+
+Backup InfluxDB:
+
+```bash
+docker run --rm \
+--entrypoint tar \
+-v monitor-alert-app_influxdb_data:/data \
+-v /home/admin1/monitor-alert-app/backups:/backup \
+influxdb:2.7 \
+czf /backup/influxdb_data.tar.gz -C /data .
+```
+
+Backup MariaDB:
+
+```bash
+docker run --rm \
+--entrypoint tar \
+-v monitor-alert-app_mariadb_data:/data \
+-v /home/admin1/monitor-alert-app/backups:/backup \
+mariadb:11 \
+czf /backup/mariadb_data.tar.gz -C /data .
+```
+
+Chạy lại app:
+
+```bash
+docker compose up -d
+```
+
+Kiểm tra backup:
+
+```bash
+ls -lh ~/monitor-alert-app/backups
+```
+
+Kết quả gồm:
+
+<img width="1118" height="640" alt="image" src="https://github.com/user-attachments/assets/5da23457-6c6e-42f0-a2a6-9c710e5b9c6f" />
+### 6.3. Đóng gói source code
+
+```bash
+cd ~
+
+tar --exclude='monitor-alert-app/monitor-alert-images.tar' \
+-czvf monitor-alert-app-source.tar.gz monitor-alert-app
+```
+
+Kiểm tra:
+
+```bash
+ls -lh monitor-alert-app-source.tar.gz
+ls -lh ~/monitor-alert-app/monitor-alert-images.tar
+```
+
+Kết quả thực tế:
+
+<img width="1366" height="768" alt="image" src="https://github.com/user-attachments/assets/d9758ba3-744a-4ca5-93fb-a8bd9e60668b" />
+
+### 6.4. Copy file sang máy chính hoặc server offline
+
+Có thể copy bằng USB, WinSCP, SCP hoặc Shared Folder máy ảo.
+
+Ví dụ copy từ Ubuntu máy ảo ra Windows bằng SCP:
+
+```powershell
+mkdir D:\DockerBackup
+
+scp admin1@192.168.220.129:/home/admin1/monitor-alert-app/monitor-alert-images.tar D:\DockerBackup\
+scp admin1@192.168.220.129:/home/admin1/monitor-alert-app-source.tar.gz D:\DockerBackup\
+```
+
+Kiểm tra trên Windows:
+
+```powershell
+dir D:\DockerBackup
+```
+
+Kết quả:
+
+```text
+monitor-alert-app-source.tar.gz
+monitor-alert-images.tar
+```
+
+<img width="1177" height="679" alt="image" src="https://github.com/user-attachments/assets/77fb201f-d8db-48ed-b246-b5c3fdf479ff" />
+
+
+<img width="1366" height="767" alt="image" src="https://github.com/user-attachments/assets/3a2a445f-85ab-4531-b726-497f49bfd05f" />
+
+
+### 6.5. Trên server offline
+
+Copy 2 file vào server:
+
+```text
+monitor-alert-images.tar
+monitor-alert-app-source.tar.gz
+```
+
+Giải nén source:
+
+```bash
+cd ~
+tar -xzvf monitor-alert-app-source.tar.gz
+cd monitor-alert-app
+```
+
+Load image:
+
+```bash
+docker load -i ~/monitor-alert-images.tar
+```
+
+Chạy app:
+
+```bash
+docker compose up -d
+docker ps
+```
+
+Nếu cần restore volume đã backup, dừng app:
+
+```bash
+docker compose stop
+```
+
+Restore Node-RED:
+
+```bash
+docker run --rm --entrypoint tar \
+-v monitor-alert-app_nodered_data:/data \
+-v /home/admin1/monitor-alert-app/backups:/backup \
+nodered/node-red:latest \
+xzf /backup/nodered_data.tar.gz -C /data
+```
+
+Restore Grafana:
+
+```bash
+docker run --rm --user root --entrypoint tar \
+-v monitor-alert-app_grafana_data:/data \
+-v /home/admin1/monitor-alert-app/backups:/backup \
+grafana/grafana:latest \
+xzf /backup/grafana_data.tar.gz -C /data
+```
+
+Restore InfluxDB:
+
+```bash
+docker run --rm --entrypoint tar \
+-v monitor-alert-app_influxdb_data:/data \
+-v /home/admin1/monitor-alert-app/backups:/backup \
+influxdb:2.7 \
+xzf /backup/influxdb_data.tar.gz -C /data
+```
+
+Restore MariaDB:
+
+```bash
+docker run --rm --entrypoint tar \
+-v monitor-alert-app_mariadb_data:/data \
+-v /home/admin1/monitor-alert-app/backups:/backup \
+mariadb:11 \
+xzf /backup/mariadb_data.tar.gz -C /data
+```
+
+Chạy lại app:
+
+```bash
+docker compose up -d
+```
+
+---
 
 
 <img width="1121" height="229" alt="image" src="https://github.com/user-attachments/assets/3781d4c7-712f-44e7-afd3-6ae96b7aaa3a" />
