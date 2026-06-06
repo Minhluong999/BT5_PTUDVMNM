@@ -1125,11 +1125,7 @@ Kết quả API thực tế:
 }
 ```
 
-**Chỗ dán ảnh test API:**
-
-```markdown
-![Kết quả test API realtime](images/api-realtime-result.png)
-```
+<img width="1121" height="635" alt="image" src="https://github.com/user-attachments/assets/73162f34-5fdb-4169-9a68-97fc0b42c49e" />
 
 ---
 
@@ -1150,11 +1146,8 @@ Process Real Weather
    └── Check Alert → Build Telegram HTTP → http request → debug
 ```
 
-**Chỗ dán ảnh flow Node-RED:**
+<img width="1072" height="544" alt="image" src="https://github.com/user-attachments/assets/ba14a5a2-b852-4630-80d8-7b2a6833b478" />
 
-```markdown
-![Flow Node-RED hoàn chỉnh](images/nodered-flow-full.png)
-```
 
 ---
 
@@ -1367,8 +1360,6 @@ msg.payload = {
 return msg;
 ```
 
-Lưu ý bảo mật: không nên public token thật lên GitHub. Khi nộp báo cáo có thể che token.
-
 ---
 
 ## 26. Test Telegram Bot
@@ -1399,11 +1390,7 @@ curl -X POST "https://api.telegram.org/bot<TOKEN>/sendMessage" \
 --data-urlencode "text=Test alert từ Ubuntu server"
 ```
 
-**Chỗ dán ảnh Telegram nhận alert:**
-
-```markdown
-![Telegram Bot gửi cảnh báo](images/telegram-alert.png)
-```
+<img width="1260" height="2800" alt="image" src="https://github.com/user-attachments/assets/31432e1e-8df9-4fc0-92ff-c6b28b7b473e" />
 
 ---
 
@@ -1435,12 +1422,7 @@ Measurement:
 ```text
 temperature_monitor
 ```
-
-**Chỗ dán ảnh InfluxDB Data Explorer:**
-
-```markdown
-![InfluxDB Data Explorer](images/influxdb-data-explorer.png)
-```
+<img width="1360" height="751" alt="image" src="https://github.com/user-attachments/assets/62a8318e-ca00-49ea-89a3-722a72199f0b" />
 
 ---
 
@@ -1487,11 +1469,7 @@ Kết quả mong muốn:
 datasource is working
 ```
 
-**Chỗ dán ảnh Grafana Data Source:**
-
-```markdown
-![Grafana Data Source InfluxDB](images/grafana-datasource.png)
-```
+<img width="1342" height="670" alt="image" src="https://github.com/user-attachments/assets/87957c88-5ebd-4d70-b8c9-563e0cabb65e" />
 
 ---
 
@@ -1510,11 +1488,8 @@ from(bucket: "monitor_bucket")
   |> yield(name: "temperature")
 ```
 
-**Chỗ dán ảnh biểu đồ Grafana:**
 
-```markdown
-![Biểu đồ Grafana lịch sử nhiệt độ](images/grafana-temperature-chart.png)
-```
+<img width="1366" height="753" alt="image" src="https://github.com/user-attachments/assets/3b3fd770-e6e4-4d96-ad0a-1debd7ed54e8" />
 
 ---
 
@@ -1541,12 +1516,11 @@ environment:
   GF_AUTH_ANONYMOUS_ORG_ROLE: "Viewer"
   GF_FEATURE_TOGGLES_ENABLE: "publicDashboards"
 ```
+Ảnh chạy dữ liệu thật 
+<img width="1313" height="631" alt="image" src="https://github.com/user-attachments/assets/30a7811f-1357-4f50-a076-6b6f54c25792" />
+Do bài đo nhiệt độ biến động nhiệt mất quá nhiều thời gian nên biểu đồ không thấy rõ
 
-**Chỗ dán ảnh Web có iframe Grafana:**
-
-```markdown
-![Web frontend nhúng Grafana iframe](images/web-iframe-grafana.png)
-```
+<img width="1366" height="767" alt="image" src="https://github.com/user-attachments/assets/91de5b18-c353-4298-9ef3-ec29249905f5" />
 
 ---
 
@@ -1572,11 +1546,7 @@ Kiểm tra:
 ls -lh monitor-alert-images.tar
 ```
 
-**Chỗ dán ảnh file image tar:**
-
-```markdown
-![File Docker images tar](images/docker-save-images-tar.png)
-```
+<img width="1121" height="629" alt="image" src="https://github.com/user-attachments/assets/cde2bf04-40d3-40cd-87c3-db531e854e82" />
 
 ---
 
@@ -1627,11 +1597,7 @@ monitor-alert-app-source.tar.gz
 monitor-alert-images.tar
 ```
 
-**Chỗ dán ảnh thư mục DockerBackup trên Windows:**
-
-```markdown
-![Thư mục DockerBackup trên Windows](images/windows-dockerbackup-folder.png)
-```
+<img width="1118" height="633" alt="image" src="https://github.com/user-attachments/assets/21c2da4f-6db8-4da5-a2e5-93d44b3a93b7" />
 
 ---
 
@@ -1663,13 +1629,8 @@ docker ps -a
 
 Nếu không còn container nào thì xóa thành công.
 
-**Chỗ dán ảnh sau khi xóa container:**
+<img width="1118" height="630" alt="image" src="https://github.com/user-attachments/assets/da1e507b-7f4c-4ab1-a8e4-1607d925d9d1" />
 
-```markdown
-![Xóa toàn bộ container](images/remove-all-containers.png)
-```
-
-Lưu ý: lệnh trên xóa toàn bộ container trên máy. Nếu máy có container khác không thuộc bài thì cần cân nhắc.
 
 ---
 
@@ -1698,11 +1659,7 @@ nginx:latest
 nodered/node-red:latest
 ```
 
-**Chỗ dán ảnh docker load images:**
-
-```markdown
-![Load Docker images từ file tar](images/docker-load-images.png)
-```
+<img width="1123" height="638" alt="image" src="https://github.com/user-attachments/assets/0c6afeb7-d293-4de7-9fd2-204a8a3751a9" />
 
 ---
 
@@ -1803,11 +1760,6 @@ Mở Grafana:
 http://192.168.220.129:3001
 ```
 
-**Chỗ dán ảnh app chạy lại sau restore:**
-
-```markdown
-![App chạy lại sau khi restore](images/app-after-restore.png)
-```
 
 ---
 
@@ -1881,17 +1833,9 @@ Toàn bộ Docker image, source code, cấu hình và dữ liệu volume đã đ
 
 ---
 
-<img width="1121" height="229" alt="image" src="https://github.com/user-attachments/assets/3781d4c7-712f-44e7-afd3-6ae96b7aaa3a" />
-
-
-vẽ biểu đồ
-<img width="1360" height="751" alt="image" src="https://github.com/user-attachments/assets/62a8318e-ca00-49ea-89a3-722a72199f0b" />
 
 
 
 
-<img width="1366" height="753" alt="image" src="https://github.com/user-attachments/assets/3b3fd770-e6e4-4d96-ad0a-1debd7ed54e8" />
 
 
-chuyển file từ máy ảo ra máy thật
-<img width="1118" height="634" alt="image" src="https://github.com/user-attachments/assets/2038897e-9d00-47c1-b898-6b8721ee1dce" />
