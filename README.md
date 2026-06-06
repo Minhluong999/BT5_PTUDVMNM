@@ -302,3 +302,7 @@ vẽ biểu đồ
 
 
 <img width="1366" height="753" alt="image" src="https://github.com/user-attachments/assets/3b3fd770-e6e4-4d96-ad0a-1debd7ed54e8" />
+
+
+chuyển file từ máy ảo ra máy thật
+<img width="1118" height="634" alt="image" src="https://github.com/user-attachments/assets/2038897e-9d00-47c1-b898-6b8721ee1dce" />
