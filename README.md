@@ -1792,32 +1792,8 @@ InfluxDB:   http://192.168.220.129:8086
 
 ---
 
-## 40. Lưu ý khi triển khai trên máy chủ không có Internet
 
-Nếu máy chủ không có Internet hoàn toàn:
-
-- Node-RED không gọi được Open-Meteo API
-- Telegram Bot không gửi được tin nhắn
-- Không thể `docker pull` image từ Docker Hub
-
-Vì vậy cần:
-
-- Đóng gói image bằng `docker save`
-- Chuyển file `.tar` sang server
-- Load image bằng `docker load`
-- Dùng nguồn dữ liệu nội bộ hoặc dữ liệu giả lập nếu không có Internet
-- Nếu muốn Telegram hoạt động, server cần có kết nối ra Internet hoặc proxy/gateway
-
-Trong môi trường thực hành, app đã được đóng gói thành:
-
-```text
-monitor-alert-images.tar
-monitor-alert-app-source.tar.gz
-```
-
----
-
-## 41. Kết luận
+## 40. Kết luận
 
 BT5 đã xây dựng thành công ứng dụng **APP MONITOR + ALERT DATA REALTIME** bằng Docker Compose với nhiều service gồm Node-RED, MariaDB, InfluxDB, Grafana, Flask API và Nginx.
 
