@@ -5,12 +5,6 @@
 
 **Môn học:** Phát triển ứng dụng với mã nguồn mở - TEE0421
 
-**Các bài trong bài tập lớn:**
-
-- **BT1:** Ubuntu + Docker: Dùng Docker để build `myapi`
-- **BT2:** Django Python: Web quản lý tiệm cầm đồ
-- **BT3:** WordPress + MariaDB + phpMyAdmin
-- **BT4:** WordPress + n8n + Bot Telegram + Gemini: Auto đăng bài bằng cách chat
 - **BT5:** Docker Compose: App Monitor + Alert Data Realtime
 
 ---
